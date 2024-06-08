@@ -13,6 +13,18 @@ domain="https://gorest.co.in"
 token = os.getenv('TOKEN')
 auth_token=f"Bearer {token}"
 
+if not auth_token:
+    raise ValueError("No authentication token found. Please set the TOKEN environment variable.")
+
+#helpers
+
+
+def generate_random_email(domain="example.com"):
+    """Generate a random email address."""
+    username = ''.join(random.choices(string.ascii_lowercase + string.digits, k=10))
+    return f"{username}@{domain}"
+
+
 #GET
 
 def get_request():
@@ -34,7 +46,7 @@ def post_request():
     headers={"Authorization":auth_token}
     data={
     "name": "Post Test1234567",
-    "email": "PostTest1234567@example.com",
+    "email": generate_random_email(),
     "gender": "male",
     "status": "inactive"
     }
@@ -61,7 +73,7 @@ def put_request(post_id):
     headers={"Authorization":auth_token}
     data={
     "name": "PutTestupdated2345",
-    "email": "PutTestupdated2345@example.com",
+    "email": generate_random_email(),
     "gender": "male",
     "status": "active"
     }
@@ -90,5 +102,9 @@ def delete_request(id):
 #calls
 get_request()
 id=post_request()
-put_request(id)
-delete_request(id)
+# Update the user
+if id:
+   put_request(id)
+# Delete the user
+if id:
+    delete_request(id)
